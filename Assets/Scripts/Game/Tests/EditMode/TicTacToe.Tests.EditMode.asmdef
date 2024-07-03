@@ -1,0 +1,22 @@
+{
+    "name": "TicTacToe.Tests.EditMode",
+    "rootNamespace": "",
+    "references": [
+        "GUID:312edd25258f33d4cb97b8593544d53c"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "nunit.framework.dll"
+    ],
+    "autoReferenced": false,
+    "defineConstraints": [
+        "UNITY_INCLUDE_TESTS"
+    ],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
