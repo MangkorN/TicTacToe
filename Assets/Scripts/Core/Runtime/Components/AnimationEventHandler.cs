@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using CoreLib.Utilities;
 
 namespace CoreLib.Components
 {
@@ -11,13 +12,17 @@ namespace CoreLib.Components
         public event Action OnAnimationStart;
         public event Action OnAnimationEnd;
 
-        public enum AnimationType { Generic, UIElements }
-        [SerializeField] private AnimationType _type;
+        public enum AnimatorType { Generic, UIElements }
+        [EnumTooltip(
+            "Generic Animator. (Default)",
+            "Animator for UI elements, allows for swapping with other UI animators if needed."
+            )]
+        [SerializeField] private AnimatorType _animatorType;
 
         private Animator _animator;
         private bool _isPlaying;
 
-        public AnimationType Type => _type;
+        public AnimatorType Type => _animatorType;
 
         private void Awake()
         {
