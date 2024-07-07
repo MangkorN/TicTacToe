@@ -16,6 +16,13 @@ namespace CoreLib.Utilities
     {
         public Color LineColor;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="HorizontalLineBoldAttribute"/> class.
+        /// </summary>
+        /// <param name="r">Red component of the line color.</param>
+        /// <param name="g">Green component of the line color.</param>
+        /// <param name="b">Blue component of the line color.</param>
+        /// <param name="a">Alpha component of the line color.</param>
         public HorizontalLineBoldAttribute(float r = 0.5f, float g = 0.5f, float b = 0.5f, float a = 1)
         {
             this.LineColor = new Color(r, g, b, a);
