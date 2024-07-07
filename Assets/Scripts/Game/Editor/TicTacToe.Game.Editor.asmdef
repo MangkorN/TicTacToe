@@ -2,7 +2,9 @@
     "name": "TicTacToe.Game.Editor",
     "rootNamespace": "",
     "references": [
-        "GUID:312edd25258f33d4cb97b8593544d53c"
+        "GUID:312edd25258f33d4cb97b8593544d53c",
+        "GUID:c055c8b90bb65774c85e6327b43c4a92",
+        "GUID:f6166391e7d9621419d63f8f7d2bd610"
     ],
     "includePlatforms": [
         "Editor"
