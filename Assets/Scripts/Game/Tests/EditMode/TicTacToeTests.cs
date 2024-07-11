@@ -237,7 +237,6 @@ namespace TicTacToe.UnitTest
                 (int, int) lastMove;
 
                 (int, int) wMove = new();
-                List<(int, int)> wLine = null;
                 bool isDraw = false;
 
                 _ticTacToeRunner.OnWin += (row, col, player) => { wMove = (row, col); };
