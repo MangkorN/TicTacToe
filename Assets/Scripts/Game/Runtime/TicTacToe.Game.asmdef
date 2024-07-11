@@ -2,7 +2,9 @@
     "name": "TicTacToe.Game",
     "rootNamespace": "",
     "references": [
-        "GUID:c055c8b90bb65774c85e6327b43c4a92"
+        "GUID:c055c8b90bb65774c85e6327b43c4a92",
+        "GUID:75469ad4d38634e559750d17036d5f7c",
+        "GUID:6055be8ebefd69e48b49212b09b47b2f"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c74a4d2df81ef344a92104ee8ec03dd, type: 3}
+  m_Name: UIEH_Score
+  m_EditorClassIdentifier: 
+  _name: Score
+  _description: 
+  _lastInvokedTag: 
+  _events: []
+  ShowDebugLog: 0
+  _canvasPrefab: {fileID: 720997196760067377, guid: d5d38d28e9addfa4399a7de743f36a6d,
+    type: 3}

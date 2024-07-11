@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c74a4d2df81ef344a92104ee8ec03dd, type: 3}
+  m_Name: UIEH_EndingScreen
+  m_EditorClassIdentifier: 
+  _name: EndingScreen
+  _description: 
+  _lastInvokedTag: 
+  _events:
+  - Tag: BackToStart
+    Event:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 11400000, guid: 070abcce9104b3540b8e6a3b32850d29, type: 2}
+          m_TargetAssemblyTypeName: TicTacToe.Game.GameEventHub, TicTacToe.Game
+          m_MethodName: RestartScene
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  ShowDebugLog: 0
+  _canvasPrefab: {fileID: 175403917727501010, guid: b4e61acea2d4a3e46842484cc408aa9d,
+    type: 3}
