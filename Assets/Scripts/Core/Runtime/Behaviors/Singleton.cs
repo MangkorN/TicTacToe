@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using CoreLib.Utilities;
 
 namespace CoreLib.Behaviors
 {
@@ -34,6 +35,8 @@ namespace CoreLib.Behaviors
                 }
 
                 Instantiated = true;
+               
+                ResetManager.RegisterPersistentObject(this.gameObject);  // Register this instance with the ResetManager
             }
             else if (_instance != this)
             {
