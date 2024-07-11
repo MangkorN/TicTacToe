@@ -14,8 +14,14 @@ namespace TicTacToe.Game
     [RequireComponent(typeof(GraphicRaycaster))]
     public class CanvasController : MonoBehaviour
     {
+        /// <summary>
+        /// Broadcasts when all canvas animations have ended (after at least one animation has started).
+        /// </summary>
+        public static event Action OnAllAnimationsEnded;
+
         #region Fields & Properties
 
+        // Private static fields --------------------------------------------------------------------
         /// <summary>
         /// Number of current requests to disable canvas controls.
         /// </summary>
@@ -25,6 +31,28 @@ namespace TicTacToe.Game
         /// </summary>
         private static int _numAnimationsGlobal = 0;
 
+        // Public static properties --------------------------------------------------------------------
+        /// <summary>
+        /// Number of current requests to disable canvas controls.
+        /// </summary>
+        public static int NumDisableRequests => _numDisableRequests;
+        /// <summary>
+        ///  Number of active canvas animations.
+        /// </summary>
+        public static int NumAnimationsGlobal => _numAnimationsGlobal;
+        /// <summary>
+        /// Indicates if the canvas is disabled. The canvas remains disabled as long as there is at least one disable request.
+        /// </summary>
+        public static bool IsDisabled => _numDisableRequests > 0;
+        /// <summary>
+        /// Indicates if any canvas is currently running animations.
+        /// </summary>
+        public static bool HasActiveAnimations => _numAnimationsGlobal > 0;
+#if UNITY_EDITOR
+        public static int HighestAnimationsCountedPerTransition { get; private set; }
+#endif
+
+        // Private fields --------------------------------------------------------------------
         [Header("Status")]
         [SerializeField] private bool _isActive = false;
         [SerializeField, Tooltip("Number of local active animations.")] private int _numAnimations;
@@ -44,28 +72,7 @@ namespace TicTacToe.Game
         private bool _isEnteringScene;
         private bool _isExitingScene;
 
-        /// <summary>
-        /// Number of current requests to disable canvas controls.
-        /// </summary>
-        public static int NumDisableRequests => _numDisableRequests;
-        /// <summary>
-        ///  Number of active canvas animations.
-        /// </summary>
-        public static int NumAnimationsGlobal => _numAnimationsGlobal;
-        /// <summary>
-        /// Broadcasts when all canvas animations have ended (after at least one animation has started).
-        /// </summary>
-        public static event Action OnAllAnimationsEnded;
-
-        /// <summary>
-        /// Indicates if the canvas is disabled. The canvas remains disabled as long as there is at least one disable request.
-        /// </summary>
-        public static bool IsDisabled => _numDisableRequests > 0;
-        /// <summary>
-        /// Indicates if any canvas is currently running animations.
-        /// </summary>
-        public static bool HasActiveAnimations => _numAnimationsGlobal > 0;
-
+        // Public Properties --------------------------------------------------------------------
         public bool IsActive => _isActive;
         /// <summary>
         /// Gets or sets a value indicating whether the GraphicRaycaster is enabled.
@@ -87,10 +94,6 @@ namespace TicTacToe.Game
         /// Indicates if the canvas is busy due to being disabled or performing an enter/exit sequence.
         /// </summary>
         public bool IsBusy => _isEnteringScene || _isExitingScene || IsDisabled;
-
-#if UNITY_EDITOR
-        public static int HighestAnimationsCountedPerTransition { get; private set; }
-#endif
 
         #endregion
 
@@ -169,6 +172,41 @@ namespace TicTacToe.Game
                 return;
             }
             PlayAnimations("Exit");
+        }
+
+        /// <summary>
+        /// Overrides the canvas animator before entering or exiting the scene.
+        /// </summary>
+        /// <param name="isEnter">TRUE if canvas should enter the scene, FALSE if canvas should exit the scene.</param>
+        /// <param name="overrideOption">Select new animator to override the current canvas animator.</param>
+        /// <param name="markForDestroy">If canvas will exit the scene, TRUE if canvas should be destroyed afterwards, FALSE otherwise.</param>
+        public void OverrideBeforeEnterOrExit(bool isEnter, AnimatorOverrideOption overrideOption, bool markForDestroy = false)
+        {
+            switch (overrideOption)
+            {
+                case AnimatorOverrideOption.FromLeft:
+                    OverrideAnimator(_animatorOverrides.LeftToCenterCenterToLeft, AnimationEventHandler.AnimatorType.UIElements);
+                    break;
+                case AnimatorOverrideOption.FromRight:
+                    OverrideAnimator(_animatorOverrides.RightToCenterCenterToRight, AnimationEventHandler.AnimatorType.UIElements);
+                    break;
+                case AnimatorOverrideOption.FromTop:
+                    OverrideAnimator(_animatorOverrides.TopToCenterCenterToTop, AnimationEventHandler.AnimatorType.UIElements);
+                    break;
+                case AnimatorOverrideOption.FromBottom:
+                    OverrideAnimator(_animatorOverrides.BottomToCenterCenterToBottom, AnimationEventHandler.AnimatorType.UIElements);
+                    break;
+                case AnimatorOverrideOption.ShrinkExpand:
+                    OverrideAnimator(_animatorOverrides.ShrinkToExpandExpandToShrink, AnimationEventHandler.AnimatorType.UIElements);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(overrideOption), overrideOption, null);
+            }
+
+            if (isEnter)
+                EnterScene();
+            else
+                ExitScene(markForDestroy);
         }
 
         /// <summary>
@@ -265,74 +303,6 @@ namespace TicTacToe.Game
 
         #endregion
 
-        #region EnterScene Animation Overrides
-
-        public void EnterSceneFromLeft()
-        {
-            OverrideAnimator(_animatorOverrides.LeftToCenterCenterToLeft, AnimationEventHandler.AnimatorType.UIElements);
-            EnterScene();
-        }
-
-        public void EnterSceneFromRight()
-        {
-            OverrideAnimator(_animatorOverrides.RightToCenterCenterToRight, AnimationEventHandler.AnimatorType.UIElements);
-            EnterScene();
-        }
-
-        public void EnterSceneFromTop()
-        {
-            OverrideAnimator(_animatorOverrides.TopToCenterCenterToTop, AnimationEventHandler.AnimatorType.UIElements);
-            EnterScene();
-        }
-
-        public void EnterSceneFromBottom()
-        {
-            OverrideAnimator(_animatorOverrides.BottomToCenterCenterToBottom, AnimationEventHandler.AnimatorType.UIElements);
-            EnterScene();
-        }
-
-        public void EnterSceneExpand()
-        {
-            OverrideAnimator(_animatorOverrides.ShrinkToExpandExpandToShrink, AnimationEventHandler.AnimatorType.UIElements);
-            EnterScene();
-        }
-
-        #endregion
-
-        #region ExitScene Animation Overrides
-
-        public void ExitSceneToLeft(bool destroy)
-        {
-            OverrideAnimator(_animatorOverrides.LeftToCenterCenterToLeft, AnimationEventHandler.AnimatorType.UIElements);
-            ExitScene(destroy);
-        }
-
-        public void ExitSceneToRight(bool destroy)
-        {
-            OverrideAnimator(_animatorOverrides.RightToCenterCenterToRight, AnimationEventHandler.AnimatorType.UIElements);
-            ExitScene(destroy);
-        }
-
-        public void ExitSceneToTop(bool destroy)
-        {
-            OverrideAnimator(_animatorOverrides.TopToCenterCenterToTop, AnimationEventHandler.AnimatorType.UIElements);
-            ExitScene(destroy);
-        }
-
-        public void ExitSceneToBottom(bool destroy)
-        {
-            OverrideAnimator(_animatorOverrides.BottomToCenterCenterToBottom, AnimationEventHandler.AnimatorType.UIElements);
-            ExitScene(destroy);
-        }
-
-        public void ExitSceneShrink(bool destroy)
-        {
-            OverrideAnimator(_animatorOverrides.ShrinkToExpandExpandToShrink, AnimationEventHandler.AnimatorType.UIElements);
-            ExitScene(destroy);
-        }
-
-        #endregion
-
         #region Helpers
 
         private void PlayAnimations(string name)
@@ -378,7 +348,16 @@ namespace TicTacToe.Game
 
         #endregion
 
-        #region Helper Classes
+        #region Helper Enums & Classes
+
+        public enum AnimatorOverrideOption
+        {
+            FromLeft,
+            FromRight,
+            FromTop,
+            FromBottom,
+            ShrinkExpand
+        }
 
         [Serializable]
         private class AnimatorOverrides

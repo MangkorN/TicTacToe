@@ -137,98 +137,41 @@ namespace TicTacToe.Game
 
         #region EnterScene Animation Overrides
 
-        public void EnterFromLeft()
+        public void EnterFromLeft() => OverrideBeforeStartEnter(CanvasController.AnimatorOverrideOption.FromLeft);
+        public void EnterFromRight() => OverrideBeforeStartEnter(CanvasController.AnimatorOverrideOption.FromRight);
+        public void EnterFromTop() => OverrideBeforeStartEnter(CanvasController.AnimatorOverrideOption.FromTop);
+        public void EnterFromBottom() => OverrideBeforeStartEnter(CanvasController.AnimatorOverrideOption.FromBottom);
+        public void EnterExpand() => OverrideBeforeStartEnter(CanvasController.AnimatorOverrideOption.ShrinkExpand);
+
+        private void OverrideBeforeStartEnter(CanvasController.AnimatorOverrideOption overrideOption)
         {
             if (!EnsureCanvasIsReadyInPlayMode())
                 return;
 
-            CanvasController.EnterSceneFromLeft();
-        }
-
-        public void EnterFromRight()
-        {
-            if (!EnsureCanvasIsReadyInPlayMode())
-                return;
-
-            CanvasController.EnterSceneFromRight();
-        }
-
-        public void EnterFromTop()
-        {
-            if (!EnsureCanvasIsReadyInPlayMode())
-                return;
-
-            CanvasController.EnterSceneFromTop();
-        }
-
-        public void EnterFromBottom()
-        {
-            if (!EnsureCanvasIsReadyInPlayMode())
-                return;
-
-            CanvasController.EnterSceneFromBottom();
-        }
-
-        public void EnterExpand()
-        {
-            if (!EnsureCanvasIsReadyInPlayMode())
-                return;
-
-            CanvasController.EnterSceneExpand();
+            CanvasController.OverrideBeforeEnterOrExit(true, overrideOption);
         }
 
         #endregion
 
         #region ExitScene Animation Overrides
 
-        public void ExitToLeft() => StartExitToLeft(false);
-        public void ExitToLeftAndDespawn() => StartExitToLeft(true);
-        private void StartExitToLeft(bool destroy)
+        public void ExitToLeft() => OverrideBeforeStartExit(CanvasController.AnimatorOverrideOption.FromLeft, false);
+        public void ExitToLeftAndDespawn() => OverrideBeforeStartExit(CanvasController.AnimatorOverrideOption.FromLeft, true);
+        public void ExitToRight() => OverrideBeforeStartExit(CanvasController.AnimatorOverrideOption.FromRight, false);
+        public void ExitToRightAndDespawn() => OverrideBeforeStartExit(CanvasController.AnimatorOverrideOption.FromRight, true);
+        public void ExitToTop() => OverrideBeforeStartExit(CanvasController.AnimatorOverrideOption.FromTop, false);
+        public void ExitToTopAndDespawn() => OverrideBeforeStartExit(CanvasController.AnimatorOverrideOption.FromTop, true);
+        public void ExitToBottom() => OverrideBeforeStartExit(CanvasController.AnimatorOverrideOption.FromBottom, false);
+        public void ExitToBottomAndDespawn() => OverrideBeforeStartExit(CanvasController.AnimatorOverrideOption.FromBottom, true);
+        public void ExitShrink() => OverrideBeforeStartExit(CanvasController.AnimatorOverrideOption.ShrinkExpand, false);
+        public void ExitShrinkAndDespawn() => OverrideBeforeStartExit(CanvasController.AnimatorOverrideOption.ShrinkExpand, true);
+
+        private void OverrideBeforeStartExit(CanvasController.AnimatorOverrideOption overrideOption, bool markForDestroy = false)
         {
             if (!CanvasIsSpawnedInPlayMode())
                 return;
 
-            CanvasController.ExitSceneToLeft(destroy);
-        }
-
-        public void ExitToRight() => StartExitToRight(false);
-        public void ExitToRightAndDespawn() => StartExitToRight(true);
-        private void StartExitToRight(bool destroy)
-        {
-            if (!CanvasIsSpawnedInPlayMode())
-                return;
-
-            CanvasController.ExitSceneToRight(destroy);
-        }
-
-        public void ExitToTop() => StartExitToTop(false);
-        public void ExitToTopAndDespawn() => StartExitToTop(true);
-        private void StartExitToTop(bool destroy)
-        {
-            if (!CanvasIsSpawnedInPlayMode())
-                return;
-
-            CanvasController.ExitSceneToTop(destroy);
-        }
-
-        public void ExitToBottom() => StartExitToBottom(false);
-        public void ExitToBottomAndDespawn() => StartExitToBottom(true);
-        private void StartExitToBottom(bool destroy)
-        {
-            if (!CanvasIsSpawnedInPlayMode())
-                return;
-
-            CanvasController.ExitSceneToBottom(destroy);
-        }
-
-        public void ExitShrink() => StartExitShrink(false);
-        public void ExitShrinkAndDespawn() => StartExitShrink(true);
-        private void StartExitShrink(bool destroy)
-        {
-            if (!CanvasIsSpawnedInPlayMode())
-                return;
-
-            CanvasController.ExitSceneShrink(destroy);
+            CanvasController.OverrideBeforeEnterOrExit(false, overrideOption, markForDestroy);
         }
 
         #endregion
