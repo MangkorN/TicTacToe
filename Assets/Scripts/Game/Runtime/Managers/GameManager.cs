@@ -48,21 +48,26 @@ namespace TicTacToe.Game
 
         #endregion
 
+        #region Initialization & Deinitialization
+
         protected override IEnumerator InitializeSystem()
         {
             _gameEventHub.AddListener("StartGame", StartGameSession);
             yield break;
         }
 
-        protected override void OnDestroy()
+        protected override IEnumerator DeinitializeSystem()
         {
-            base.OnDestroy();
+            if (!IsInitialized)
+                yield break;
 
-            if (IsInitialized)
-                return;
+            _gameSession = null;
 
             _gameEventHub.RemoveListener("StartGame", StartGameSession);
+            yield break;
         }
+
+        #endregion
 
         private void StartGameSession()
         {
@@ -100,6 +105,7 @@ namespace TicTacToe.Game
             _mostRecentWinner = player;
             HandleGameEnd(row, col, player);
         }
+
         private void HandleGameDraw(int row, int col, char player)
         {
             _mostRecentWinner = '\0';
@@ -110,20 +116,7 @@ namespace TicTacToe.Game
         {
             _gameSession.PrintCurrentBoard();
             _gameSession.PrintMoveHistory();
-
             _gameEventHub.InvokeEventByTag("EndGame");
-            //CleanupGameSession();
-        }
-
-        private void RestartGame()
-        {
-            //if (_gameSession == null)
-            //    return;
-
-            //_gameSession.OnWin -= OnWin;
-            //_gameSession.OnDraw -= OnDraw;
-            //_gameSession.OnPlayerMove -= OnPlayerMove;
-            //_gameSession = null;
         }
 
         /// <summary>
@@ -141,6 +134,14 @@ namespace TicTacToe.Game
             }
 
             return _gameSession.MakeMove(row, col);
+        }
+
+        public char GetOtherPlayer(char player)
+        {
+            if (player == _gameSession.GetPlayer1)
+                return _gameSession.GetPlayer2;
+            else
+                return _gameSession.GetPlayer1;
         }
     }
 }

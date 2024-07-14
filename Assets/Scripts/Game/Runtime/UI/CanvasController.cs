@@ -64,7 +64,7 @@ namespace TicTacToe.Game
         [SerializeField] private AnimatorOverrides _animatorOverrides;
 
         [Header("Debug")]
-        [SerializeField] private bool _showDebugLog = false;
+        [SerializeField] private bool _showDebugLogs = false;
 
         private AnimatorPair[] _animatorPairs;
         private GraphicRaycaster _graphicRaycaster;
@@ -97,7 +97,7 @@ namespace TicTacToe.Game
 
         #endregion
 
-        #region Initialization/Deinitialization
+        #region Initialization & Deinitialization
 
         private void Awake()
         {
@@ -139,8 +139,7 @@ namespace TicTacToe.Game
         {
             if (IsBusy)
             {
-                if (_showDebugLog)
-                    Debug.Log($"EnterScene(): Entering={_isEnteringScene}, Exiting={_isExitingScene}, Disabled={IsDisabled}");
+                DebugLog($"{name} | EnterScene(): Entering={_isEnteringScene}, Exiting={_isExitingScene}, Disabled={IsDisabled}");
                 return;
             }
 
@@ -155,8 +154,7 @@ namespace TicTacToe.Game
         {
             if (IsBusy)
             {
-                if (_showDebugLog)
-                    Debug.Log($"ExitScene({destroy}): Entering={_isEnteringScene}, Exiting={_isExitingScene}, Disabled={IsDisabled}");
+                DebugLog($"{name} | ExitScene({destroy}): Entering={_isEnteringScene}, Exiting={_isExitingScene}, Disabled={IsDisabled}");
                 return;
             }
 
@@ -164,7 +162,7 @@ namespace TicTacToe.Game
             _isExitingScene = true;
             _markForDestroy = destroy;
 
-            if (!gameObject.activeInHierarchy) // Skip animation if inactive.
+            if (!gameObject.activeInHierarchy) // Skip animations if inactive.
             {
                 if (destroy)
                     Destroy(gameObject);
@@ -172,6 +170,25 @@ namespace TicTacToe.Game
                 return;
             }
             PlayAnimations("Exit");
+        }
+
+        /// <summary>
+        /// Instantly removes the canvas from the scene and destroys it. (Use this when resetting the <see cref="CanvasManager"/>.)
+        /// </summary>
+        public void ExitSceneForce()
+        {
+            if (_isEnteringScene || _isExitingScene)
+            {
+                DebugLog($"{name} | ExitSceneForce: Entering={_isEnteringScene}, Exiting={_isExitingScene}, Disabled={IsDisabled}");
+
+                for (int i = 0; i < _numAnimations; i++) // Manually end all active animations.
+                    HandleAnimationEnd();
+
+                if (_numAnimations != 0)
+                    Debug.LogError($"Number of animations is {_numAnimations}, expected 0!"); 
+            }
+
+            Destroy(gameObject);
         }
 
         /// <summary>
@@ -345,6 +362,12 @@ namespace TicTacToe.Game
         private static void HandleDisableAll() { }
 
         private static void HandleEnableAll() { }
+
+        private void DebugLog(string log)
+        {
+            if (_showDebugLogs)
+                Debug.Log(log);
+        }
 
         #endregion
 

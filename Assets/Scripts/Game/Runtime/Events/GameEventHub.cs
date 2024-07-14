@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using CoreLib.Utilities;
+using CoreLib.Components;
 
 namespace TicTacToe.Game
 {
@@ -94,15 +95,27 @@ namespace TicTacToe.Game
             _lockSettings = lockSettings;
         }
 
-        [ContextMenu("Reset Game")]
-        public void RestartScene()
+        #region Event handling (TODO: refactor)
+
+        [ContextMenu("Restart Game")]
+        public void RestartGame()
         {
-            ResetManager.ResetGame();
-            //string currentSceneName = SceneManager.GetActiveScene().name;
-            //SceneManager.LoadScene(currentSceneName);
+            if (SystemLoader.Instance != null)
+                SystemLoader.Instance.UnloadSystems(RestartScene);
+            else
+                Debug.LogError("System Loader not found in scene! Cannot end game!");
         }
 
-        #region Event handling (TODO: refactor)
+        private void RestartScene()
+        {
+            //string currentSceneName = SceneManager.GetActiveScene().name;
+            //SceneManager.LoadScene(currentSceneName);
+
+            if (SystemLoader.Instance != null)
+                SystemLoader.Instance.LoadSystems();
+            else
+                Debug.LogError("System Loader not found in scene! Cannot start game!");
+        }
 
         private void PreviewGameBoard(int size)
         {

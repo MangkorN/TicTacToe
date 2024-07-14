@@ -75,7 +75,7 @@ namespace TicTacToe.Game
         public void Exit() => StartExit(false);
 
         /// <summary>
-        /// Make  exit scene and destroy it afterwards. Works only if canvas has been spawned.
+        /// Make canvas exit scene and destroy it afterwards. Works only if canvas has been spawned.
         /// </summary>
         public void ExitAndDespawn() => StartExit(true);
 
@@ -85,6 +85,17 @@ namespace TicTacToe.Game
                 return;
 
             CanvasController.ExitScene(destroy);
+        }
+
+        /// <summary>
+        /// Instantly removes the canvas from the scene and destroys it. Works only if canvas has been spawned.
+        /// </summary>
+        public void ExitSceneForce()
+        {
+            if (!CanvasIsSpawnedInPlayMode())
+                return;
+
+            CanvasController.ExitSceneForce();
         }
 
         #endregion

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using CoreLib.Components;
 
 namespace TicTacToe.Game
 {
@@ -11,34 +12,51 @@ namespace TicTacToe.Game
         public const float MARKGRID_HEIGHT = 4.5f;
 
         [Header("Status")]
-        [SerializeField] private bool _initialized = false;
         [SerializeField] private char _player = '0';
 
         [Header("Settings")]
         [SerializeField] private float _moveSpeed = 17.3f;
         [SerializeField] private GameObject _markerPrefab;
 
-        private List<GameObject> _markers;
         private Vector3 _targetPosition;
         private bool _isPlayerTurn;
 
+        private void Awake()
+        {
+            SystemLoader.OnSystemUnload += SelfDestruct;
+
+            if (GridBoardsController.Instance != null)
+            {
+                GridBoardsController.Instance.OnPlayerGridMovement += SetTargetPosition;
+                GridBoardsController.Instance.OnPlayerMoveSuccess += MarkPosition;
+                GridBoardsController.Instance.OnDuelEnd += HandleDuelEnd;
+            }
+        }
+
+        private void OnDestroy()
+        {
+            SystemLoader.OnSystemUnload -= SelfDestruct;
+
+            if (GridBoardsController.Instance != null)
+            {
+                GridBoardsController.Instance.OnPlayerGridMovement -= SetTargetPosition;
+                GridBoardsController.Instance.OnPlayerMoveSuccess -= MarkPosition;
+                GridBoardsController.Instance.OnDuelEnd -= HandleDuelEnd;
+            }
+        }
+
+        private void SelfDestruct()
+        {
+            Destroy(gameObject);
+        }
+
         public void Initialize(char player, bool hide)
         {
-            if (GridBoardsController.Instance == null)
-                return;
-
-            GridBoardsController.Instance.OnPlayerGridMovement += SetTargetPosition;
-            GridBoardsController.Instance.OnPlayerMoveSuccess += MarkPosition;
-            GridBoardsController.Instance.OnGameEnd += HandleGameEnd;
-
             _player = player;
-            _markers = new();
             transform.position = new Vector3(transform.position.x, MARKER_HEIGHT, transform.position.z);
 
             GetComponentInChildren<ParticleSystem>().Play();
             gameObject.SetActive(!hide);
-
-            _initialized = true;
         }
 
         private void Update()
@@ -54,16 +72,6 @@ namespace TicTacToe.Game
             {
                 transform.position = _targetPosition;
             }
-        }
-
-        private void OnDestroy()
-        {
-            if (!_initialized || GridBoardsController.Instance == null)
-                return;
-
-            GridBoardsController.Instance.OnPlayerGridMovement -= SetTargetPosition;
-            GridBoardsController.Instance.OnPlayerMoveSuccess -= MarkPosition;
-            GridBoardsController.Instance.OnGameEnd -= HandleGameEnd;
         }
 
         private void SetTargetPosition(Vector3 position, char player)
@@ -93,13 +101,12 @@ namespace TicTacToe.Game
             }
 
             // Last move was from this player, therefore mark the last move with this player's marker.
-            GameObject marker = Instantiate(_markerPrefab, new Vector3(position.x, MARKGRID_HEIGHT, position.z), Quaternion.identity);
-            _markers.Add(marker);
+            Instantiate(_markerPrefab, new Vector3(position.x, MARKGRID_HEIGHT, position.z), Quaternion.identity);
 
             gameObject.SetActive(false); // Deactivate, and wait for the other player's turn.
         }
 
-        private void HandleGameEnd(bool gameResult, char player)
+        private void HandleDuelEnd(bool gameResult, char player)
         {
             Destroy(gameObject);
         }

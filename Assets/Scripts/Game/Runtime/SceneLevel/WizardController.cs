@@ -2,20 +2,15 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using CoreLib.Components;
 
 namespace TicTacToe.Game
 {
     public class WizardController : MonoBehaviour
     {
-        [Serializable]
-        private struct GameSizeToPosition
-        {
-            [Tooltip("The game size required to use the position.")] public int GameSize;
-            [Tooltip("The position to use when the game size requirement is met.")] public Transform Position;
-        }
+        #region Fields & Properties
 
         [Header("Status")]
-        [SerializeField] private bool _initialized = false;
         [SerializeField] private char _player = '0';
         [SerializeField] private bool _isCastingSpell = false;
 
@@ -28,7 +23,7 @@ namespace TicTacToe.Game
 
 #if UNITY_EDITOR
         [Header("Debug")]
-        [SerializeField, Range(2,5)] private int _testGameSize;
+        [SerializeField, Range(2, 5)] private int _testGameSize;
 #endif
 
         private Animator _animator;
@@ -45,23 +40,39 @@ namespace TicTacToe.Game
             }
         }
 
-        #region Initialization & Cleanup
+        #endregion
+
+        #region Initialization & Deinitialization
 
         private void Awake()
         {
             _animator = GetComponent<Animator>();
             gameObject.SetActive(false);
+
+            if (GridBoardsController.Instance != null)
+            {
+                GridBoardsController.Instance.OnPlayerGridMovement += SetLookAtPosition;
+                GridBoardsController.Instance.OnPlayerMoveSuccess += UpdateSpellAnimations;
+                GridBoardsController.Instance.OnDuelEnd += HandleDuelEnd;
+            }
+
+            SystemLoader.OnSystemUnload += HideWizard;
+        }
+
+        private void OnDestroy()
+        {
+            if (GridBoardsController.Instance != null)
+            {
+                GridBoardsController.Instance.OnPlayerGridMovement -= SetLookAtPosition;
+                GridBoardsController.Instance.OnPlayerMoveSuccess -= UpdateSpellAnimations;
+                GridBoardsController.Instance.OnDuelEnd -= HandleDuelEnd;
+            }
+
+            SystemLoader.OnSystemUnload -= HideWizard;
         }
 
         public void Initialize(char player, int gameSize, bool isPlayerTurn)
         {
-            if (GridBoardsController.Instance == null)
-                return;
-
-            GridBoardsController.Instance.OnPlayerGridMovement += SetLookAtPosition;
-            GridBoardsController.Instance.OnPlayerMoveSuccess += UpdateSpellAnimations;
-            GridBoardsController.Instance.OnGameEnd += HandleGameEnd;
-
             if (!FindAndMoveToPosition(gameSize))
                 Debug.LogWarning("No appropriate position found! Could not place wizard.");
 
@@ -73,18 +84,6 @@ namespace TicTacToe.Game
                 _lookAtPosition = GridBoardsController.Instance.GetPlayerMarkerPositionInScene(_player);
             else
                 _lookAtPosition = GridBoardsController.Instance.transform.position;
-
-            _initialized = true;
-        }
-
-        private void OnDestroy()
-        {
-            if (!_initialized || GridBoardsController.Instance == null)
-                return;
-
-            GridBoardsController.Instance.OnPlayerGridMovement -= SetLookAtPosition;
-            GridBoardsController.Instance.OnPlayerMoveSuccess -= UpdateSpellAnimations;
-            GridBoardsController.Instance.OnGameEnd -= HandleGameEnd;
         }
 
         private bool FindAndMoveToPosition(int gameSize)
@@ -101,7 +100,14 @@ namespace TicTacToe.Game
             return wizardPlaced;
         }
 
+        private void HideWizard()
+        {
+            gameObject.SetActive(false);
+        }
+
         #endregion
+
+        #region Gameplay
 
         private void Update()
         {
@@ -130,11 +136,13 @@ namespace TicTacToe.Game
             _lookAtPosition = GridBoardsController.Instance.GetPlayerMarkerPositionInScene(_player);
         }
 
-        private void HandleGameEnd(bool gameResult, char player)
+        private void HandleDuelEnd(bool gameResult, char player)
         {
             IsCastingSpell = false;
             _lookAtPosition = GridBoardsController.Instance.transform.position;
         }
+
+        #endregion
 
 #if UNITY_EDITOR
         [ContextMenu("Test Game Size")]
@@ -144,5 +152,16 @@ namespace TicTacToe.Game
                 Debug.LogWarning("No appropriate position found! Could not place wizard.");
         }
 #endif
+
+        #region Helper types
+
+        [Serializable]
+        private struct GameSizeToPosition
+        {
+            [Tooltip("The game size required to use the position.")] public int GameSize;
+            [Tooltip("The position to use when the game size requirement is met.")] public Transform Position;
+        }
+
+        #endregion
     }
 }

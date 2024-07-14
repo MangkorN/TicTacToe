@@ -14,6 +14,8 @@ namespace TicTacToe.Game
         [Header("Canvases (Drag to determine sorting order)"), HorizontalLine]
         [SerializeField] private CanvasSettings[] _canvasSettings;
 
+        #region Initialization & Deinitialization
+
         protected override IEnumerator InitializeSystem()
         {
             if (!CanvasSettingsAreValid())
@@ -32,15 +34,23 @@ namespace TicTacToe.Game
             yield break;
         }
 
-        protected override void OnDestroy()
+        protected override IEnumerator DeinitializeSystem()
         {
-            base.OnDestroy();
-
-            if (IsInitialized)
-                return;
+            if (!IsInitialized)
+                yield break;
 
             CanvasController.OnAllAnimationsEnded -= RefreshCanvasRaycasterStatuses;
+
+            foreach (var setting in _canvasSettings)
+                setting.EventHandler.ExitSceneForce();
+
+            if (CanvasController.NumAnimationsGlobal != 0)
+                Debug.LogError($"Total number of canvas animations is {CanvasController.NumAnimationsGlobal}, expected 0!");
+
+            yield break;
         }
+
+        #endregion
 
         /// <summary>
         /// Turn all active canvas graphic raycasters ON or OFF depending on sort order and individual canvas settings.

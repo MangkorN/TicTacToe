@@ -1,3 +1,4 @@
+using CoreLib.Components;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
@@ -20,26 +21,39 @@ namespace TicTacToe.Game
 
         private HashSet<(int, int)> _moveSet;
 
-        #region Initialization & Cleanup
+        #region Initialization & Deinitialization
 
         private void Awake()
         {
+            SystemLoader.OnSystemUnload += StopAllCoroutines;
+
             if (GameManager.Instance == null)
                 GameManager.OnInitialized += () => { RegisterToGameManager(true); };
             else
                 RegisterToGameManager(true);
-        }
 
-        private void Start()
-        {
-            if (GridBoardsController.Instance != null)
-                GridBoardsController.Instance.OnPlayerMoveComplete += HandlePlayerMoveAndRespond;
+            if (GridBoardsController.Instance == null)
+                GridBoardsController.OnInstantiated += () => { RegisterToGridBoardsController(true); };
+            else
+                RegisterToGridBoardsController(true);
         }
 
         private void OnDestroy()
         {
+            SystemLoader.OnSystemUnload -= StopAllCoroutines;
+
             RegisterToGameManager(false);
-            if (GridBoardsController.Instance != null)
+            RegisterToGridBoardsController(false);
+        }
+
+        private void RegisterToGridBoardsController(bool register)
+        {
+            if (GridBoardsController.Instance == null)
+                return;
+
+            if (register)
+                GridBoardsController.Instance.OnPlayerMoveComplete += HandlePlayerMoveAndRespond;
+            else
                 GridBoardsController.Instance.OnPlayerMoveComplete -= HandlePlayerMoveAndRespond;
         }
 
