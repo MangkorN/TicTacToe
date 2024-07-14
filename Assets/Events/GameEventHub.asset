@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _name: GameEventHub
   _description: 
-  _lastInvokedTag: EndGame
+  _lastInvokedTag: StartGame
   _events:
   - Tag: StartGame
     Event:
@@ -85,5 +85,5 @@ MonoBehaviour:
             m_BoolArgument: 0
           m_CallState: 2
   ShowDebugLog: 0
-  _gameBoardSize: 5
-  _gameMode: 1
+  _gameBoardSize: 3
+  _gameMode: 0

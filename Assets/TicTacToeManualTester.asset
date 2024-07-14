@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f24b8381a2eeee1428f15d122fc3775e, type: 3}
   m_Name: TicTacToeManualTester
   m_EditorClassIdentifier: 
-  _size: 3
+  _size: 15
   _player1Character: 65
   _player2Character: 66
   _moveList:

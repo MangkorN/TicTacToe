@@ -409,8 +409,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 94c3b4dc2ba7ace43837b67544efc24a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _gridMovementSpeed: 17.3
   _cameraMoveDuration: 0.27
+  _camJiggleTargetFOV: 55
+  _camJiggleDuration: 0.17
   _cameraTarget: {fileID: 6889155980995640930}
+  _virtualCamera: {fileID: 9073080175475358746}
   _positions:
   - Tag: Size2
     Position: {fileID: 0}

@@ -22,7 +22,7 @@ MonoBehaviour:
         m_Calls:
         - m_Target: {fileID: 11400000, guid: 070abcce9104b3540b8e6a3b32850d29, type: 2}
           m_TargetAssemblyTypeName: TicTacToe.Game.GameEventHub, TicTacToe.Game
-          m_MethodName: RestartScene
+          m_MethodName: RestartGame
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}

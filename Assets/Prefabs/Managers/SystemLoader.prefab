@@ -46,10 +46,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21ffe335e703f22488ca764cd8875aab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _systemsLoaded: 0
+  _loadSystemOnStart: 1
   _systemManagerObjects:
   - {fileID: 6253962001654994567}
   - {fileID: 6008078342191878302}
-  _showDebugLogs: 1
+  _showDebugLogs: 0
 --- !u!1001 &2512920969263666212
 PrefabInstance:
   m_ObjectHideFlags: 0
