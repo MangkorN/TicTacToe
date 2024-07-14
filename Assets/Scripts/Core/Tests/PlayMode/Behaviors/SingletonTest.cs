@@ -57,5 +57,18 @@ namespace CoreLib.UnitTest.Behaviors
             var secondInstance = new GameObject().AddComponent<TestSingleton>();
             Assert.AreNotEqual(secondInstance, TestSingleton.Instance);
         }
+
+        [Test]
+        public void OnInstantiatedEventTriggered()
+        {
+            bool eventCalled = false;
+            Singleton<TestSingleton>.OnInstantiated += () => eventCalled = true;
+
+            new GameObject().AddComponent<TestSingleton>();
+
+            Assert.IsTrue(eventCalled);
+
+            Singleton<TestSingleton>.OnInstantiated -= () => eventCalled = true;
+        }
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,6 +12,8 @@ namespace CoreLib.Behaviors
     /// </summary>
     public abstract class SceneSingleton<T> : MonoBehaviour where T : SceneSingleton<T>
     {
+        public static event Action OnInstantiated;
+
         private static T _instance;
         public static T Instance => _instance;
 
@@ -22,6 +25,7 @@ namespace CoreLib.Behaviors
             {
                 _instance = (T)this;
                 Instantiated = true;
+                OnInstantiated?.Invoke();
             }
             else if (_instance != this)
             {

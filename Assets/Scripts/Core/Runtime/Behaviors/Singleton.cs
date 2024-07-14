@@ -1,7 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using CoreLib.Utilities;
 
 namespace CoreLib.Behaviors
 {
@@ -10,6 +10,8 @@ namespace CoreLib.Behaviors
     /// </summary>
     public abstract class Singleton<T> : MonoBehaviour where T : Singleton<T>
     {
+        public static event Action OnInstantiated;
+
         private static T _instance;
         public static T Instance => _instance;
 
@@ -21,22 +23,12 @@ namespace CoreLib.Behaviors
             {
                 _instance = (T)this;
 
-                if (transform.parent == null)
-                {
-                    DontDestroyOnLoad(this.gameObject);
-                }
-                else
-                {
-                    if (transform.root.gameObject.scene.buildIndex != -1)
-                    {
-                        transform.SetParent(null);
-                        DontDestroyOnLoad(this.gameObject);
-                    }
-                }
+                if (transform.root.gameObject.scene.buildIndex != -1)
+                    transform.SetParent(null);
 
+                DontDestroyOnLoad(this.gameObject);
                 Instantiated = true;
-               
-                ResetManager.RegisterPersistentObject(this.gameObject);  // Register this instance with the ResetManager
+                OnInstantiated?.Invoke();
             }
             else if (_instance != this)
             {

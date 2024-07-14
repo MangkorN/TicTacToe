@@ -15,6 +15,11 @@ namespace CoreLib.UnitTest.Behaviors
             {
                 yield return null; // Simulate initialization
             }
+
+            protected override IEnumerator DeinitializeSystem()
+            {
+                yield return null; // Simulate deinitialization
+            }
         }
 
         [SetUp]
