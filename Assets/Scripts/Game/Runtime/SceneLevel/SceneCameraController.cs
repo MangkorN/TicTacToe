@@ -52,7 +52,7 @@ namespace TicTacToe.Game
         protected override void Awake()
         {
             base.Awake();
-            SystemLoader.OnSystemUnload += ResetCameraPositionAndRotation;
+            SystemLoader.OnSystemUnload += HandleSystemUnload;
 
             if (GridBoardsController.Instance == null)
                 GridBoardsController.OnInstantiated += () => { RegisterToGridBoardsController(true); };
@@ -76,7 +76,7 @@ namespace TicTacToe.Game
         protected override void OnDestroy()
         {
             base.OnDestroy();
-            SystemLoader.OnSystemUnload -= ResetCameraPositionAndRotation;
+            SystemLoader.OnSystemUnload -= HandleSystemUnload;
 
             RegisterToGridBoardsController(false);
         }
@@ -115,6 +115,12 @@ namespace TicTacToe.Game
         private void HandleDuelEnd(bool result, char player)
         {
             _gridIsLive = false;
+        }
+
+        private void HandleSystemUnload()
+        {
+            _gridIsLive = false;
+            ResetCameraPositionAndRotation();
         }
 
         private void HandlePlayerGridMovement(Vector3 position, char player)

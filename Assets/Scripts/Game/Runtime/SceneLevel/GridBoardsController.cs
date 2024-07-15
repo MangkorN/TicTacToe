@@ -176,6 +176,8 @@ namespace TicTacToe.Game
                     Destroy(playerMarker);
             }
             _playerMarkers = null;
+
+            _gameInProgress = false;
         }
 
         #endregion
