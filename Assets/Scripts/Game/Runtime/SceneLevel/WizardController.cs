@@ -49,26 +49,38 @@ namespace TicTacToe.Game
             _animator = GetComponent<Animator>();
             gameObject.SetActive(false);
 
-            if (GridBoardsController.Instance != null)
-            {
-                GridBoardsController.Instance.OnPlayerGridMovement += SetLookAtPosition;
-                GridBoardsController.Instance.OnPlayerMoveSuccess += UpdateSpellAnimations;
-                GridBoardsController.Instance.OnDuelEnd += HandleDuelEnd;
-            }
+            if (GridBoardsController.Instance == null)
+                GridBoardsController.OnInstantiated += () => { RegisterToGridBoardsController(true); };
+            else
+                RegisterToGridBoardsController(true);
 
             SystemLoader.OnSystemUnload += HideWizard;
         }
 
         private void OnDestroy()
         {
-            if (GridBoardsController.Instance != null)
+            RegisterToGridBoardsController(false);
+
+            SystemLoader.OnSystemUnload -= HideWizard;
+        }
+
+        private void RegisterToGridBoardsController(bool register)
+        {
+            if (GridBoardsController.Instance == null)
+                return;
+
+            if (register)
+            {
+                GridBoardsController.Instance.OnPlayerGridMovement += SetLookAtPosition;
+                GridBoardsController.Instance.OnPlayerMoveSuccess += UpdateSpellAnimations;
+                GridBoardsController.Instance.OnDuelEnd += HandleDuelEnd;
+            }
+            else
             {
                 GridBoardsController.Instance.OnPlayerGridMovement -= SetLookAtPosition;
                 GridBoardsController.Instance.OnPlayerMoveSuccess -= UpdateSpellAnimations;
                 GridBoardsController.Instance.OnDuelEnd -= HandleDuelEnd;
             }
-
-            SystemLoader.OnSystemUnload -= HideWizard;
         }
 
         public void Initialize(char player, int gameSize, bool isPlayerTurn)

@@ -25,19 +25,31 @@ namespace TicTacToe.Game
         {
             SystemLoader.OnSystemUnload += SelfDestruct;
 
-            if (GridBoardsController.Instance != null)
-            {
-                GridBoardsController.Instance.OnPlayerGridMovement += SetTargetPosition;
-                GridBoardsController.Instance.OnPlayerMoveSuccess += MarkPosition;
-                GridBoardsController.Instance.OnDuelEnd += HandleDuelEnd;
-            }
+            if (GridBoardsController.Instance == null)
+                GridBoardsController.OnInstantiated += () => { RegisterToGridBoardsController(true); };
+            else
+                RegisterToGridBoardsController(true);
         }
 
         private void OnDestroy()
         {
             SystemLoader.OnSystemUnload -= SelfDestruct;
 
-            if (GridBoardsController.Instance != null)
+            RegisterToGridBoardsController(false);
+        }
+
+        private void RegisterToGridBoardsController(bool register)
+        {
+            if (GridBoardsController.Instance == null)
+                return;
+
+            if (register)
+            {
+                GridBoardsController.Instance.OnPlayerGridMovement += SetTargetPosition;
+                GridBoardsController.Instance.OnPlayerMoveSuccess += MarkPosition;
+                GridBoardsController.Instance.OnDuelEnd += HandleDuelEnd;
+            }
+            else
             {
                 GridBoardsController.Instance.OnPlayerGridMovement -= SetTargetPosition;
                 GridBoardsController.Instance.OnPlayerMoveSuccess -= MarkPosition;

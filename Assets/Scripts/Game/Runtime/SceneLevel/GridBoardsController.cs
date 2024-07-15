@@ -273,28 +273,28 @@ namespace TicTacToe.Game
 
         public void OnMoveUp(InputAction.CallbackContext context)
         {
-            if (!context.performed || GameManager.Instance.IsBotTurn)
+            if (!context.performed || !_gameInProgress || GameManager.Instance.IsBotTurn)
                 return;
             MovePlayerInGrid((-1, 0));
         }
 
         public void OnMoveDown(InputAction.CallbackContext context)
         {
-            if (!context.performed || GameManager.Instance.IsBotTurn)
+            if (!context.performed || !_gameInProgress || GameManager.Instance.IsBotTurn)
                 return;
             MovePlayerInGrid((1, 0));
         }
 
         public void OnMoveLeft(InputAction.CallbackContext context)
         {
-            if (!context.performed || GameManager.Instance.IsBotTurn)
+            if (!context.performed || !_gameInProgress || GameManager.Instance.IsBotTurn)
                 return;
             MovePlayerInGrid((0, -1));
         }
 
         public void OnMoveRight(InputAction.CallbackContext context)
         {
-            if (!context.performed || GameManager.Instance.IsBotTurn)
+            if (!context.performed || !_gameInProgress || GameManager.Instance.IsBotTurn)
                 return;
             MovePlayerInGrid((0, 1));
         }
@@ -325,7 +325,7 @@ namespace TicTacToe.Game
 
         public void OnConfirm(InputAction.CallbackContext context)
         {
-            if (!context.performed || GameManager.Instance.IsBotTurn)
+            if (!context.performed || !_gameInProgress || GameManager.Instance.IsBotTurn)
                 return;
             ConfirmBlock();
         }
