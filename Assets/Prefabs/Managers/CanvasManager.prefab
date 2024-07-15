@@ -106,8 +106,16 @@ MonoBehaviour:
     Overrides:
       OverrideSortOrder: 0
       SortOrder: 0
-  - Name: SettingsGameMode
+  - Name: Instructions
     SortOrder: 1
+    EventHandler: {fileID: 11400000, guid: 1a7d3a7c571dc724c9e4502d5ed6fc00, type: 2}
+    SpawnOnStart: 0
+    DisableRaycastersBeneath: 0
+    Overrides:
+      OverrideSortOrder: 0
+      SortOrder: 0
+  - Name: SettingsGameMode
+    SortOrder: 2
     EventHandler: {fileID: 11400000, guid: 5a4d7429af0506a4fa77724b377ff6e3, type: 2}
     SpawnOnStart: 0
     DisableRaycastersBeneath: 0
@@ -115,7 +123,7 @@ MonoBehaviour:
       OverrideSortOrder: 0
       SortOrder: 0
   - Name: SettingsGameSize
-    SortOrder: 2
+    SortOrder: 3
     EventHandler: {fileID: 11400000, guid: abf0b82643339274d815ef5703d5b731, type: 2}
     SpawnOnStart: 0
     DisableRaycastersBeneath: 0
@@ -123,7 +131,7 @@ MonoBehaviour:
       OverrideSortOrder: 0
       SortOrder: 0
   - Name: InGameMenu
-    SortOrder: 3
+    SortOrder: 4
     EventHandler: {fileID: 11400000, guid: 556ffbf26bee518418d7450e009804bb, type: 2}
     SpawnOnStart: 0
     DisableRaycastersBeneath: 0
@@ -131,7 +139,7 @@ MonoBehaviour:
       OverrideSortOrder: 0
       SortOrder: 0
   - Name: Score
-    SortOrder: 4
+    SortOrder: 5
     EventHandler: {fileID: 11400000, guid: 5b72f8a1a523abf46a363ee0b85f1944, type: 2}
     SpawnOnStart: 0
     DisableRaycastersBeneath: 0
@@ -139,7 +147,7 @@ MonoBehaviour:
       OverrideSortOrder: 0
       SortOrder: 0
   - Name: EndingScreen
-    SortOrder: 5
+    SortOrder: 6
     EventHandler: {fileID: 11400000, guid: babe934c1c0592d4495cf2622d7020cf, type: 2}
     SpawnOnStart: 0
     DisableRaycastersBeneath: 0
