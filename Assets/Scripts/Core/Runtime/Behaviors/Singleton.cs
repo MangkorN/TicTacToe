@@ -23,10 +23,19 @@ namespace CoreLib.Behaviors
             {
                 _instance = (T)this;
 
-                if (transform.root.gameObject.scene.buildIndex != -1)
-                    transform.SetParent(null);
+                if (transform.parent == null)
+                {
+                    DontDestroyOnLoad(this.gameObject);
+                }
+                else
+                {
+                    if (transform.root.gameObject.scene.buildIndex != -1)
+                    {
+                        transform.SetParent(null);
+                        DontDestroyOnLoad(this.gameObject);
+                    }
+                }
 
-                DontDestroyOnLoad(this.gameObject);
                 Instantiated = true;
                 OnInstantiated?.Invoke();
             }
