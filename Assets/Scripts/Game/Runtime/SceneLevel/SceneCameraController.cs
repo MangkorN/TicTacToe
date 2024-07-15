@@ -115,6 +115,14 @@ namespace TicTacToe.Game
         private void HandleDuelEnd(bool result, char player)
         {
             _gridIsLive = false;
+
+            // Make camera move to the center of the grid board.
+            Vector3 gridBoardPosition = GridBoardsController.Instance.transform.position;
+            gridBoardPosition.y = CAM_Y_FIXED;
+            gridBoardPosition.z += CAM_Z_ADD;
+            if (_camMovementCoroutine != null)
+                StopCoroutine(_camMovementCoroutine);
+            _camMovementCoroutine = StartCoroutine(SmoothMoveAndRotate(gridBoardPosition, _cameraTarget.rotation, _cameraMoveDuration));
         }
 
         private void HandleSystemUnload()
@@ -123,21 +131,18 @@ namespace TicTacToe.Game
             ResetCameraPositionAndRotation();
         }
 
-        private void HandlePlayerGridMovement(Vector3 position, char player)
-        {
-            _cameraGridTargetPosition = new(position.x, CAM_Y_FIXED, position.z + CAM_Z_ADD);
-        }
-
         private void HandlePlayerMoveSuccess(Vector3 position, char player)
         {
-            if (GameManager.Instance == null)
-                return;
-
             char otherPlayer = GameManager.Instance.GetOtherPlayer(player);
             Vector3 otherPlayerMarkerPosition = GridBoardsController.Instance.GetPlayerMarkerPositionInScene(otherPlayer);
             HandlePlayerGridMovement(otherPlayerMarkerPosition, otherPlayer);
 
             JiggleCamFOV();
+        }
+
+        private void HandlePlayerGridMovement(Vector3 position, char player)
+        {
+            _cameraGridTargetPosition = new(position.x, CAM_Y_FIXED, position.z + CAM_Z_ADD);
         }
 
         #endregion
